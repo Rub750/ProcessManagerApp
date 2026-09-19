@@ -1,0 +1,24 @@
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.32526.122
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProcessManagerApp", "ProcessManagerApp\ProcessManagerApp.csproj", "{8A6B5D3E-2C4A-4B7C-8E2D-1F4A6B8C7D3E}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|AnyCPU = Debug|AnyCPU
+		Release|AnyCPU = Release|AnyCPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{8A6B5D3E-2C4A-4B7C-8E2D-1F4A6B8C7D3E}.Debug|AnyCPU.ActiveCfg = Debug|AnyCPU
+		{8A6B5D3E-2C4A-4B7C-8E2D-1F4A6B8C7D3E}.Debug|AnyCPU.Build.0 = Debug|AnyCPU
+		{8A6B5D3E-2C4A-4B7C-8E2D-1F4A6B8C7D3E}.Release|AnyCPU.ActiveCfg = Release|AnyCPU
+		{8A6B5D3E-2C4A-4B7C-8E2D-1F4A6B8C7D3E}.Release|AnyCPU.Build.0 = Release|AnyCPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {7A5D3E2C-4A6B-4B7C-8E2D-1F4A6B8C7D3E}
+	EndGlobalSection
+EndGlobal
