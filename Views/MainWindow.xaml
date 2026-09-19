@@ -1,0 +1,254 @@
+<Window x:Class="ProcessManagerApp.Views.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:ProcessManagerApp.Views"
+        xmlns:models="clr-namespace:ProcessManagerApp.Models"
+        mc:Ignorable="d"
+        Title="Gestionnaire de Processus - Windows" Height="700" Width="1200" 
+        WindowStartupLocation="CenterScreen" ResizeMode="CanResizeWithGrip" 
+        Icon="/ProcessManagerApp;component/Resources/process.ico" Loaded="Window_Loaded">
+    
+    <Window.Resources>
+        <!-- Styles -->
+        <Style TargetType="DataGrid">
+            <Setter Property="Background" Value="#F5F5F5"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="BorderBrush" Value="#DDDDDD"/>
+            <Setter Property="RowBackground" Value="White"/>
+            <Setter Property="AlternatingRowBackground" Value="#F9F9F9"/>
+            <Setter Property="RowHeight" Value="30"/>
+            <Setter Property="CanUserSortColumns" Value="True"/>
+            <Setter Property="AutoGenerateColumns" Value="False"/>
+            <Setter Property="SelectionUnit" Value="FullRow"/>
+            <Setter Property="SelectionMode" Value="Single"/>
+        </Style>
+
+        <Style TargetType="DataGridColumnHeader">
+            <Setter Property="Background" Value="#4A90E2"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="Padding" Value="10,5,10,5"/>
+            <Setter Property="BorderThickness" Value="0,0,1,0"/>
+            <Setter Property="BorderBrush" Value="#3A7BC8"/>
+        </Style>
+
+        <Style TargetType="Button">
+            <Setter Property="Background" Value="#4A90E2"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="BorderBrush" Value="#3A7BC8"/>
+            <Setter Property="Padding" Value="10,5,10,5"/>
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="CornerRadius" Value="4"/>
+            <Setter Property="Margin" Value="5"/>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#3A7BC8"/>
+                </Trigger>
+                <Trigger Property="IsPressed" Value="True">
+                    <Setter Property="Background" Value="#2A5AA8"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style TargetType="TextBox">
+            <Setter Property="Padding" Value="8,5,8,5"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="BorderBrush" Value="#CCCCCC"/>
+            <Setter Property="CornerRadius" Value="3"/>
+            <Setter Property="FontSize" Value="12"/>
+        </Style>
+
+        <Style TargetType="ComboBox">
+            <Setter Property="Padding" Value="5"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="BorderBrush" Value="#CCCCCC"/>
+            <Setter Property="CornerRadius" Value="3"/>
+            <Setter Property="FontSize" Value="12"/>
+        </Style>
+
+        <!-- DataTemplates -->
+        <DataTemplate DataType="{x:Type models:ProcessInfo}">
+            <StackPanel Orientation="Horizontal">
+                <Image Source="{Binding ProcessIcon, Converter={StaticResource IconToImageSourceConverter}}" 
+                       Width="16" Height="16" Margin="0,0,5,0" Visibility="{Binding ProcessIcon, Converter={StaticResource NullToVisibilityConverter}}"/>
+                <TextBlock Text="{Binding ProcessName}" FontWeight="Bold"/>
+            </StackPanel>
+        </DataTemplate>
+
+        <!-- Converters -->
+        <local:NullToVisibilityConverter x:Key="NullToVisibilityConverter"/>
+        <local:IconToImageSourceConverter x:Key="IconToImageSourceConverter"/>
+        <local:PriorityToColorConverter x:Key="PriorityToColorConverter"/>
+        <local:CategoryToColorConverter x:Key="CategoryToColorConverter"/>
+        <local:CriticalToVisibilityConverter x:Key="CriticalToVisibilityConverter"/>
+    </Window.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- Header -->
+        <Border Grid.Row="0" Background="#4A90E2" Padding="15" BorderThickness="0,0,0,1" BorderBrush="#3A7BC8">
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="SpaceBetween">
+                <StackPanel Orientation="Horizontal">
+                    <Image Source="/ProcessManagerApp;component/Resources/process.ico" Width="32" Height="32" Margin="0,0,10,0"/>
+                    <TextBlock Text="Gestionnaire de Processus" FontSize="20" FontWeight="Bold" Foreground="White" VerticalAlignment="Center"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="{Binding ProcessCount}" FontSize="14" Foreground="White" VerticalAlignment="Center"/>
+                    <TextBlock Text=" processus en cours" FontSize="14" Foreground="#E0E0E0" VerticalAlignment="Center" Margin="5,0,0,0"/>
+                </StackPanel>
+            </StackPanel>
+        </Border>
+
+        <!-- Toolbar -->
+        <Border Grid.Row="1" Background="#F5F5F5" Padding="10" BorderThickness="0,0,0,1" BorderBrush="#DDDDDD">
+            <StackPanel Orientation="Horizontal">
+                <!-- Search Box -->
+                <TextBox x:Name="SearchTextBox" Width="250" Margin="0,0,10,0" 
+                         PlaceholderText="Rechercher un processus..." 
+                         TextChanged="SearchTextBox_TextChanged"/>
+                
+                <!-- Filter by Category -->
+                <ComboBox x:Name="CategoryFilterComboBox" Width="150" Margin="0,0,10,0"
+                          DisplayMemberPath="CategoryString" 
+                          ItemsSource="{Binding Categories}" 
+                          SelectionChanged="CategoryFilterComboBox_SelectionChanged">
+                    <ComboBoxItem Content="Toutes les catégories" Tag="{x:Null}" IsSelected="True"/>
+                </ComboBox>
+                
+                <!-- Filter by Priority -->
+                <ComboBox x:Name="PriorityFilterComboBox" Width="150" Margin="0,0,10,0"
+                          DisplayMemberPath="PriorityString" 
+                          ItemsSource="{Binding Priorities}" 
+                          SelectionChanged="PriorityFilterComboBox_SelectionChanged">
+                    <ComboBoxItem Content="Toutes les priorités" Tag="{x:Null}" IsSelected="True"/>
+                </ComboBox>
+                
+                <!-- Refresh Button -->
+                <Button Content="🔄 Rafraîchir" Click="RefreshButton_Click" ToolTip="Rafraîchir la liste des processus"/>
+            </StackPanel>
+        </Border>
+
+        <!-- Main Content - DataGrid -->
+        <Grid Grid.Row="2" Margin="10">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <DataGrid x:Name="ProcessDataGrid" 
+                      ItemsSource="{Binding FilteredProcesses}"
+                      SelectedItem="{Binding SelectedProcess}"
+                      MouseDoubleClick="ProcessDataGrid_MouseDoubleClick"
+                      CanUserAddRows="False" CanUserDeleteRows="False" CanUserReorderColumns="True">
+                
+                <DataGrid.Columns>
+                    <!-- Icon -->
+                    <DataGridTemplateColumn Header="" Width="40">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <Image Source="{Binding ProcessIcon, Converter={StaticResource IconToImageSourceConverter}}" 
+                                       Width="16" Height="16" HorizontalAlignment="Center"/>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+
+                    <!-- Process ID -->
+                    <DataGridTextColumn Header="ID" Binding="{Binding ProcessId}" Width="60"/>
+
+                    <!-- Process Name -->
+                    <DataGridTextColumn Header="Nom du Processus" Binding="{Binding ProcessName}" Width="150"/>
+
+                    <!-- Window Title -->
+                    <DataGridTextColumn Header="Titre de la Fenêtre" Binding="{Binding WindowTitle}" Width="200"/>
+
+                    <!-- Category -->
+                    <DataGridTemplateColumn Header="Catégorie" Width="120">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <Border Background="{Binding Category, Converter={StaticResource CategoryToColorConverter}}" 
+                                        Padding="5" CornerRadius="3">
+                                    <TextBlock Text="{Binding CategoryString}" HorizontalAlignment="Center"/>
+                                </Border>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+
+                    <!-- Priority -->
+                    <DataGridTemplateColumn Header="Priorité" Width="100">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <Border Background="{Binding Priority, Converter={StaticResource PriorityToColorConverter}}" 
+                                        Padding="5" CornerRadius="3">
+                                    <TextBlock Text="{Binding PriorityString}" HorizontalAlignment="Center"/>
+                                </Border>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+
+                    <!-- CPU Usage -->
+                    <DataGridTextColumn Header="CPU" Binding="{Binding CpuUsagePercent}" Width="80"/>
+
+                    <!-- Memory Usage -->
+                    <DataGridTextColumn Header="Mémoire" Binding="{Binding MemoryUsageMB}" Width="100"/>
+
+                    <!-- Uptime -->
+                    <DataGridTextColumn Header="Temps d'activité" Binding="{Binding UptimeString}" Width="150"/>
+
+                    <!-- Thread Count -->
+                    <DataGridTextColumn Header="Threads" Binding="{Binding ThreadCount}" Width="80"/>
+
+                    <!-- Handle Count -->
+                    <DataGridTextColumn Header="Handles" Binding="{Binding HandleCount}" Width="80"/>
+
+                    <!-- Is Critical -->
+                    <DataGridTemplateColumn Header="Critique" Width="70">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <Image Source="/ProcessManagerApp;component/Resources/warning.ico" 
+                                       Width="16" Height="16" HorizontalAlignment="Center" 
+                                       Visibility="{Binding IsCritical, Converter={StaticResource CriticalToVisibilityConverter}}" 
+                                       ToolTip="Processus critique pour le système"/>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+
+                    <!-- Actions -->
+                    <DataGridTemplateColumn Header="Actions" Width="120">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal">
+                                    <Button Content="Détails" Click="DetailsButton_Click" 
+                                            Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" 
+                                            Background="#50C878" Margin="0,0,5,0" 
+                                            ToolTip="Voir les détails du processus"/>
+                                    <Button Content="Arrêter" Click="KillButton_Click" 
+                                            Background="#FF6B6B" 
+                                            Visibility="{Binding IsCritical, Converter={StaticResource CriticalToVisibilityConverter}, ConverterParameter='Inverse'}"
+                                            ToolTip="Arrêter le processus"/>
+                                </StackPanel>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                </DataGrid.Columns>
+            </DataGrid>
+        </Grid>
+
+        <!-- Status Bar -->
+        <StatusBar Grid.Row="3" Background="#F5F5F5" Padding="10">
+            <StatusBarItem>
+                <TextBlock Text="{Binding StatusMessage}" FontSize="12" Foreground="#666666"/>
+            </StatusBarItem>
+            <StatusBarItem HorizontalAlignment="Right">
+                <TextBlock Text="{Binding LastRefreshTime, StringFormat='Dernière mise à jour: {0:HH:mm:ss}'}" FontSize="12" Foreground="#666666"/>
+            </StatusBarItem>
+        </StatusBar>
+    </Grid>
+</Window>
