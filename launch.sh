@@ -15,7 +15,9 @@ fi
 
 # Vérifier la version de dotnet
 DOTNET_VERSION=$(dotnet --version)
-if [ "$(printf '%s\n8.0\n' "$DOTNET_VERSION" | sort -V | head -n1)" != "8.0" ]; then
+MAJOR_VERSION=$(echo "$DOTNET_VERSION" | grep -oE '^[0-9]+')
+
+if [ "$MAJOR_VERSION" -lt 8 ]; then
     echo "ERREUR: .NET 8.0 ou supérieur est requis (version détectée: $DOTNET_VERSION)"
     read -p "Appuyez sur Entrée pour quitter..."
     exit 1

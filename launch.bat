@@ -17,7 +17,12 @@ if %ERRORLEVEL% neq 0 (
 
 REM Vérifier la version de dotnet
 for /f "tokens=*" %%i in ('dotnet --version') do set DOTNET_VERSION=%%i
-if "%DOTNET_VERSION%" LSS "8.0" (
+
+REM Extraire le premier nombre de la version (ex: 10 de 10.0.401)
+for /f "tokens=1 delims=. " %%a in ("%DOTNET_VERSION%") do set MAJOR_VERSION=%%a
+
+REM Vérifier que la version majeure est >= 8
+if %MAJOR_VERSION% LSS 8 (
     echo ERREUR: .NET 8.0 ou superieur est requis (version detectee: %DOTNET_VERSION%)
     pause
     exit /b 1
