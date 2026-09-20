@@ -2,67 +2,67 @@
 chcp 65001 >nul 2>&1
 
 echo ========================================
-echo   ProcessManagerApp - Lancement
+echo   ProcessManagerApp - Launch
 echo ========================================
 echo.
 
-REM Vérifier si dotnet est installé
+REM Check if dotnet is installed
 where dotnet >nul 2>&1
 if %ERRORLEVEL% neq 0 (
-    echo ERREUR: .NET SDK n'est pas installé ou n'est pas dans le PATH
-    echo Telechargez .NET 8.0 SDK depuis: https://dotnet.microsoft.com/download
+    echo ERROR: .NET SDK is not installed or not in PATH
+    echo Download .NET 8.0+ SDK from: https://dotnet.microsoft.com/download
     pause
     exit /b 1
 )
 
-REM Vérifier la version de dotnet
+REM Get dotnet version
 for /f "tokens=*" %%i in ('dotnet --version') do set DOTNET_VERSION=%%i
 
-REM Extraire le premier nombre de la version (ex: 10 de 10.0.401)
+REM Extract major version number (ex: 10 from 10.0.401)
 for /f "tokens=1 delims=. " %%a in ("%DOTNET_VERSION%") do set MAJOR_VERSION=%%a
 
-REM Vérifier que la version majeure est >= 8
+REM Check if version is >= 8
 if %MAJOR_VERSION% LSS 8 (
-    echo ERREUR: .NET 8.0 ou superieur est requis (version detectee: %DOTNET_VERSION%)
+    echo ERROR: .NET 8.0 or higher is required (detected version: %DOTNET_VERSION%)
     pause
     exit /b 1
 )
 
-echo Version de .NET detectee: %DOTNET_VERSION%
+echo Detected .NET version: %DOTNET_VERSION%
 echo.
 
-REM Restaurer les packages NuGet
-echo Restauration des packages NuGet...
+REM Restore NuGet packages
+echo Restoring NuGet packages...
 dotnet restore ProcessManagerApp.sln
 if %ERRORLEVEL% neq 0 (
-    echo ERREUR: Echec de la restauration des packages
+    echo ERROR: Failed to restore packages
     pause
     exit /b 1
 )
 
-REM Builder le projet en Release
-echo Construction du projet...
+REM Build the project in Release mode
+echo Building the project...
 dotnet build ProcessManagerApp.sln --configuration Release --no-restore
 if %ERRORLEVEL% neq 0 (
-    echo ERREUR: Echec de la compilation
+    echo ERROR: Build failed
     pause
     exit /b 1
 )
 
-REM Trouver l'executable
+REM Find the executable
 set EXE_PATH=bin\Release\net8.0-windows\ProcessManagerApp.exe
 if not exist "%EXE_PATH%" (
-    echo ERREUR: Executable introuvable: %EXE_PATH%
+    echo ERROR: Executable not found: %EXE_PATH%
     pause
     exit /b 1
 )
 
 echo.
-echo Lancement de ProcessManagerApp...
+echo Launching ProcessManagerApp...
 echo.
 
-REM Lancer l'application
+REM Launch the application
 start "" "%EXE_PATH%"
 
-echo Application lancee avec succes!
-echo Vous pouvez fermer cette fenetre.
+echo Application launched successfully!
+echo You can close this window.
