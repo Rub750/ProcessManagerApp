@@ -10,6 +10,8 @@
     <ApplicationIcon>Resources\process.ico</ApplicationIcon>
     <StartupObject>ProcessManagerApp.App</StartupObject>
     <UseWPF>true</UseWPF>
+    <EnableWindowsTargeting>true</EnableWindowsTargeting>
+    <EnableDefaultPageItems>false</EnableDefaultPageItems>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -32,11 +34,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Include="**\*.cs" />
-    <Resource Include="**\*.xaml" />
-  </ItemGroup>
-
-  <ItemGroup>
     <EmbeddedResource Include="Resources\process.ico" />
     <EmbeddedResource Include="Resources\warning.ico" />
   </ItemGroup>
@@ -45,15 +42,9 @@
     <Page Include="App.xaml" />
     <Page Include="Views\MainWindow.xaml" />
     <Page Include="Views\Styles.xaml" />
-    <Compile Include="Views\Converters\*.cs" />
-    <Compile Include="Views\MainWindow.xaml.cs" />
-    <Compile Include="ViewModels\*.cs" />
-    <Compile Include="Models\*.cs" />
-    <Compile Include="Services\*.cs" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.NET.Sdk.Windows" Version="8.0.0" />
     <PackageReference Include="System.Drawing.Common" Version="8.0.0" />
   </ItemGroup>
 

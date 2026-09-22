@@ -29,7 +29,6 @@
         <Setter Property="BorderBrush" Value="{StaticResource SecondaryBrush}"/>
         <Setter Property="Padding" Value="10,5,10,5"/>
         <Setter Property="FontSize" Value="12"/>
-        <Setter Property="CornerRadius" Value="4"/>
         <Setter Property="Margin" Value="5"/>
         <Style.Triggers>
             <Trigger Property="IsMouseOver" Value="True">
@@ -48,7 +47,6 @@
         <Setter Property="BorderBrush" Value="#3A9D5D"/>
         <Setter Property="Padding" Value="10,5,10,5"/>
         <Setter Property="FontSize" Value="12"/>
-        <Setter Property="CornerRadius" Value="4"/>
         <Setter Property="Margin" Value="5"/>
         <Style.Triggers>
             <Trigger Property="IsMouseOver" Value="True">
@@ -67,7 +65,6 @@
         <Setter Property="BorderBrush" Value="#E05A5A"/>
         <Setter Property="Padding" Value="10,5,10,5"/>
         <Setter Property="FontSize" Value="12"/>
-        <Setter Property="CornerRadius" Value="4"/>
         <Setter Property="Margin" Value="5"/>
         <Style.Triggers>
             <Trigger Property="IsMouseOver" Value="True">
@@ -84,7 +81,6 @@
         <Setter Property="Padding" Value="8,5,8,5"/>
         <Setter Property="BorderThickness" Value="1"/>
         <Setter Property="BorderBrush" Value="{StaticResource MediumGrayBrush}"/>
-        <Setter Property="CornerRadius" Value="3"/>
         <Setter Property="FontSize" Value="12"/>
         <Setter Property="Width" Value="250"/>
     </Style>
@@ -94,7 +90,6 @@
         <Setter Property="Padding" Value="5"/>
         <Setter Property="BorderThickness" Value="1"/>
         <Setter Property="BorderBrush" Value="{StaticResource MediumGrayBrush}"/>
-        <Setter Property="CornerRadius" Value="3"/>
         <Setter Property="FontSize" Value="12"/>
         <Setter Property="Width" Value="150"/>
     </Style>

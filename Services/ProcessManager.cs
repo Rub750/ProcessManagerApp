@@ -157,7 +157,7 @@ namespace ProcessManagerApp.Services
             }
             catch (Exception ex)
             {
-                throw new Exception($"Erreur lors de la terminaison du processus: {processId}", ex);
+                throw new Exception("Erreur lors de la terminaison du processus: " + processId, ex);
             }
         }
 
@@ -172,4 +172,44 @@ namespace ProcessManagerApp.Services
                     var processInfo = _processes.FirstOrDefault(p => p.ProcessId == process.Id);
                     if (processInfo?.IsCritical == true)
                     {
-                        throw new InvalidOperationException($
+                        throw new InvalidOperationException("Impossible de terminer un processus critique pour le système.");
+                    }
+
+                    process.Kill();
+                    process.WaitForExit();
+                }
+                
+                await Task.Delay(100);
+                await RefreshProcessesAsync();
+            }
+            catch (InvalidOperationException ex)
+            {
+                throw ex;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Erreur lors de la terminaison du processus: " + processName, ex);
+            }
+        }
+
+
+        public async Task ChangeProcessPriorityAsync(int processId, ProcessPriority priority)
+        {
+            try
+            {
+                var process = Process.GetProcessById(processId);
+                process.PriorityClass = (ProcessPriorityClass)priority;
+                await Task.Delay(100);
+                await RefreshProcessesAsync();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Erreur lors du changement de priorité: " + processId, ex);
+            }
+        }
+        public void Dispose()
+        {
+            _refreshTimer?.Dispose();
+        }
+    }
+}
