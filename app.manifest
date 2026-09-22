@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<application xmlns="urn:schemas-microsoft-com:asm.v3">
-  <windowsSettings>
-    <!-- The combination of below two tags have the following effect:
-         1. Per-monitor for >= Windows 10 Anniversary Update
-         2. System-aware for older Windows versions -->
-    <dpiAwareness xmlns="http://schemas.microsoft.com/SMI/2016/WindowsSettings">PerMonitorV2, PerMonitor</dpiAwareness>
-    <dpiAwareness xmlns="http://schemas.microsoft.com/SMI/2005/WindowsSettings">PerMonitor</dpiAwareness>
-  </windowsSettings>
+<assembly manifestVersion="1.0" xmlns="urn:schemas-microsoft-com:asm.v1">
+  <assemblyIdentity version="1.0.0.0" name="ProcessManagerApp" />
+  <trustInfo xmlns="urn:schemas-microsoft-com:asm.v2">
+    <security>
+      <requestedPrivileges xmlns="urn:schemas-microsoft-com:asm.v3">
+        <requestedExecutionLevel level="asInvoker" uiAccess="false" />
+      </requestedPrivileges>
+    </security>
+  </trustInfo>
   <compatibility xmlns="urn:schemas-microsoft-com:compatibility.v1">
     <application>
       <!-- Windows 10 -->
@@ -19,9 +20,24 @@
       <supportedOS Id="{35138b9a-5d96-4fbd-8e2d-a2440225f93a}" />
     </application>
   </compatibility>
-  <application>
+  <application xmlns="urn:schemas-microsoft-com:asm.v3">
+    <windowsSettings>
+      <dpiAwareness xmlns="http://schemas.microsoft.com/SMI/2016/WindowsSettings">PerMonitorV2, PerMonitor</dpiAwareness>
+      <dpiAwareness xmlns="http://schemas.microsoft.com/SMI/2005/WindowsSettings">PerMonitor</dpiAwareness>
+    </windowsSettings>
     <windowsSettings xmlns:ws2="http://schemas.microsoft.com/SMI/2016/WindowsSettings">
       <ws2:longPathAware>true</ws2:longPathAware>
     </windowsSettings>
   </application>
-</application>
+  <dependency>
+    <dependentAssembly>
+      <assemblyIdentity
+          name="Microsoft.Windows.Common-Controls"
+          version="6.0.0.0"
+          processorArchitecture="x86"
+          publicKeyToken="6595b64144ccf1df"
+          language="*"
+      />
+    </dependentAssembly>
+  </dependency>
+</assembly>
