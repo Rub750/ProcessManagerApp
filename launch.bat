@@ -1,22 +1,49 @@
 @echo off
 setlocal
 
-REM Launch script for Process Manager Pro
+REM Process Manager Pro - Launch Script
 REM This script builds and runs the application
 
 cd /d %~dp0
 
-echo Building Process Manager Pro...
-call build.ps1 -Configuration Release -SelfContained true
+echo Process Manager Pro - Starting...
 
+REM Check if publish directory exists and has the exe
+if exist .\publish\ProcessManagerApp.exe (
+    echo Launching existing build...
+    start "" .\publish\ProcessManagerApp.exe
+    echo Application launched!
+    exit /b 0
+)
+
+echo Building application (first run - this may take a moment)...
+
+REM Build with .NET CLI
+dotnet restore ProcessManagerApp.csproj >nul 2>&1
 if %errorlevel% neq 0 (
-    echo Build failed!
+    echo Error: Failed to restore packages
+    echo Please ensure .NET 8.0 SDK is installed
+    echo Download from: https://dotnet.microsoft.com/download/dotnet/8.0
     pause
     exit /b 1
 )
 
-echo Launching application...
-start .\bin\Release\net8.0-windows\win-x64\publish\ProcessManagerApp.exe
+dotnet build ProcessManagerApp.csproj -c Release --no-restore >nul 2>&1
+if %errorlevel% neq 0 (
+    echo Error: Failed to build project
+    pause
+    exit /b 1
+)
+
+dotnet publish ProcessManagerApp.csproj -c Release -r win-x64 --self-contained true -p:PublishSingleFile=true -p:PublishReadyToRun=true -p:PublishTrimmed=false -o .\publish >nul 2>&1
+if %errorlevel% neq 0 (
+    echo Error: Failed to publish application
+    pause
+    exit /b 1
+)
+
+echo Launching Process Manager Pro...
+start "" .\publish\ProcessManagerApp.exe
 
 echo Application launched successfully!
-pause
+echo You can close this window.
