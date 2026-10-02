@@ -1,0 +1,268 @@
+<Window x:Class="ProcessManagerApp.Views.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:ProcessManagerApp.Views"
+        xmlns:viewModels="clr-namespace:ProcessManagerApp.ViewModels"
+        mc:Ignorable="d"
+        Title="Process Manager Pro" WindowState="Maximized" WindowStyle="None"
+        ResizeMode="CanResizeWithGrip" AllowsTransparency="True"
+        Background="{DynamicResource WindowBackground}" Foreground="{DynamicResource TextBrush}">
+    
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="../Resources/Styles.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Window.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- Header -->
+        <Border Grid.Row="0" Background="{DynamicResource HeaderBackground}" Padding="10,5">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <StackPanel Grid.Column="0" Orientation="Horizontal">
+                    <TextBlock Text="Process Manager Pro" FontSize="20" FontWeight="Bold" 
+                               Foreground="{DynamicResource AccentBrush}" VerticalAlignment="Center"/>
+                </StackPanel>
+
+                <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Center">
+                    <TextBlock Text="{Binding SystemMonitor.StatusMessage}" FontSize="14"
+                               Foreground="{DynamicResource TextBrush}" VerticalAlignment="Center"/>
+                </StackPanel>
+
+                <StackPanel Grid.Column="2" Orientation="Horizontal">
+                    <Button Content="_" Style="{StaticResource WindowButtonStyle}" 
+                            Command="{x:Static SystemCommands.MinimizeWindowCommand}" 
+                            CommandTarget="{Binding RelativeSource={RelativeSource AncestorType=Window}}"/>
+                    <Button Content="[]" Style="{StaticResource WindowButtonStyle}" 
+                            Command="{x:Static SystemCommands.MaximizeWindowCommand}" 
+                            CommandTarget="{Binding RelativeSource={RelativeSource AncestorType=Window}}"/>
+                    <Button Content="X" Style="{StaticResource WindowButtonStyle}" 
+                            Command="{x:Static SystemCommands.CloseWindowCommand}" 
+                            CommandTarget="{Binding RelativeSource={RelativeSource AncestorType=Window}}"/>
+                </StackPanel>
+            </Grid>
+        </Border>
+
+        <!-- Main Content -->
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <!-- Sidebar Navigation -->
+            <Border Grid.Column="0" Background="{DynamicResource SidebarBackground}" Width="200">
+                <StackPanel Margin="5">
+                    <Button Content="Tableau de bord" Style="{StaticResource NavButtonStyle}"
+                            Command="{Binding ShowAllProcessesCommand}" Tag="Dashboard"/>
+                    <Button Content="Processus" Style="{StaticResource NavButtonStyle}"
+                            Command="{Binding ShowAllProcessesCommand}" Tag="Processes"/>
+                    <Button Content="Optimisation" Style="{StaticResource NavButtonStyle}"
+                            Command="{Binding ShowAllProcessesCommand}" Tag="Optimization"/>
+                    <Button Content="Disques" Style="{StaticResource NavButtonStyle}"
+                            Command="{Binding ShowAllProcessesCommand}" Tag="Disks"/>
+                    <Button Content="Paramètres" Style="{StaticResource NavButtonStyle}"
+                            Command="{Binding ShowAllProcessesCommand}" Tag="Settings"/>
+                </StackPanel>
+            </Border>
+
+            <!-- Main Content Area -->
+            <Grid Grid.Column="1">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <!-- Dashboard Header -->
+                <Border Grid.Row="0" Background="{DynamicResource CardBackground}" 
+                        Margin="10,10,10,5" Padding="10" CornerRadius="5">
+                    <TextBlock Text="{Binding SystemMonitor.SystemSummary}" FontSize="14"
+                               Foreground="{DynamicResource TextBrush}" TextWrapping="Wrap"/>
+                </Border>
+
+                <!-- Main Dashboard Content -->
+                <Grid Grid.Row="1">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <!-- CPU Card -->
+                    <Border Grid.Column="0" Background="{DynamicResource CardBackground}" 
+                            Margin="10,0,5,10" Padding="15" CornerRadius="5">
+                        <StackPanel>
+                            <TextBlock Text="Utilisation CPU" FontSize="16" FontWeight="Bold"
+                                       Foreground="{DynamicResource TextBrush}"/>
+                            <TextBlock Text="{Binding SystemMonitor.CpuUsage, StringFormat='{}{0:F1}%'}" 
+                                       FontSize="24" FontWeight="Bold" 
+                                       Foreground="{DynamicResource AccentBrush}" Margin="0,10,0,0"/>
+                            <ProgressBar Value="{Binding SystemMonitor.CpuUsage}" Maximum="100"
+                                         Height="10" Foreground="{DynamicResource AccentBrush}" 
+                                         Background="{DynamicResource ProgressBackground}" Margin="0,10,0,0"/>
+                            <TextBlock Text="Processeurs: {Binding SystemMonitor.ProcessorCount}"
+                                       FontSize="12" Foreground="{DynamicResource SecondaryTextBrush}"/>
+                            <TextBlock Text="{Binding SystemMonitor.ProcessorInfo}" 
+                                       FontSize="10" Foreground="{DynamicResource SecondaryTextBrush}"
+                                       TextWrapping="Wrap" Margin="0,5,0,0"/>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Memory Card -->
+                    <Border Grid.Column="1" Background="{DynamicResource CardBackground}" 
+                            Margin="5,0,5,10" Padding="15" CornerRadius="5">
+                        <StackPanel>
+                            <TextBlock Text="Utilisation RAM" FontSize="16" FontWeight="Bold"
+                                       Foreground="{DynamicResource TextBrush}"/>
+                            <TextBlock Text="{Binding SystemMonitor.MemoryUsage, StringFormat='{}{0:F1}%'}" 
+                                       FontSize="24" FontWeight="Bold" 
+                                       Foreground="{DynamicResource AccentBrush}" Margin="0,10,0,0"/>
+                            <ProgressBar Value="{Binding SystemMonitor.MemoryUsage}" Maximum="100"
+                                         Height="10" Foreground="{DynamicResource AccentBrush}" 
+                                         Background="{DynamicResource ProgressBackground}" Margin="0,10,0,0"/>
+                            <TextBlock Text="{Binding SystemMonitor.AvailableMemory, StringFormat='Disponible: {0:N0} bytes'}"
+                                       FontSize="12" Foreground="{DynamicResource SecondaryTextBrush}"/>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Disk Card -->
+                    <Border Grid.Column="2" Background="{DynamicResource CardBackground}" 
+                            Margin="5,0,10,10" Padding="15" CornerRadius="5">
+                        <StackPanel>
+                            <TextBlock Text="Utilisation Disque" FontSize="16" FontWeight="Bold"
+                                       Foreground="{DynamicResource TextBrush}"/>
+                            <ItemsControl ItemsSource="{Binding SystemMonitor.Disks}">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <StackPanel Margin="0,5,0,0">
+                                            <TextBlock Text="{Binding Name}" FontSize="14" FontWeight="Bold"
+                                                       Foreground="{DynamicResource TextBrush}"/>
+                                            <ProgressBar Value="{Binding UsagePercent}" Maximum="100"
+                                                         Height="8" Foreground="{DynamicResource AccentBrush}" 
+                                                         Background="{DynamicResource ProgressBackground}"/>
+                                            <TextBlock Text="{Binding UsagePercent, StringFormat='{}{0:F1}%'}" 
+                                                       FontSize="12" Foreground="{DynamicResource SecondaryTextBrush}"
+                                                       HorizontalAlignment="Right"/>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </StackPanel>
+                    </Border>
+                </Grid>
+
+                <!-- Process List -->
+                <Border Grid.Row="2" Background="{DynamicResource CardBackground}" 
+                        Margin="10,0,10,10" Padding="15" CornerRadius="5">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+
+                        <!-- Search Bar -->
+                        <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0,0,0,10">
+                            <TextBox Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"
+                                     Width="200" Margin="0,0,10,0" 
+                                     Style="{StaticResource SearchBoxStyle}" 
+                                     PlaceholderText="Rechercher un processus..."/>
+                            <Button Content="Rafraîchir" Command="{Binding RefreshCommand}"
+                                    Style="{StaticResource AccentButtonStyle}" Margin="0,0,10,0"/>
+                            <Button Content="Tuer le processus" Command="{Binding KillProcessCommand}"
+                                    Style="{StaticResource DangerButtonStyle}" 
+                                    IsEnabled="{Binding SelectedProcess, Converter={StaticResource NullToBoolConverter}}"/>
+                            <Button Content="Fermer la tâche" Command="{Binding EndTaskCommand}"
+                                    Style="{StaticResource WarningButtonStyle}" 
+                                    IsEnabled="{Binding SelectedProcess, Converter={StaticResource NullToBoolConverter}}"/>
+                        </StackPanel>
+
+                        <!-- Process Data Grid -->
+                        <DataGrid Grid.Row="1" ItemsSource="{Binding FilteredProcesses}" 
+                                  SelectedItem="{Binding SelectedProcess}" 
+                                  AutoGenerateColumns="False" CanUserAddRows="False"
+                                  CanUserDeleteRows="False" CanUserReorderColumns="True"
+                                  CanUserSortColumns="True" IsReadOnly="True"
+                                  Background="Transparent" BorderThickness="0"
+                                  RowBackground="{DynamicResource RowBackground}" 
+                                  AlternatingRowBackground="{DynamicResource AlternatingRowBackground}"
+                                  Foreground="{DynamicResource TextBrush}" 
+                                  SelectionUnit="FullRow" SelectionMode="Single">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="ID" Binding="{Binding Id}" Width="Auto"/>
+                                <DataGridTextColumn Header="Nom" Binding="{Binding Name}" Width="*"/>
+                                <DataGridTextColumn Header="CPU %" Binding="{Binding CpuUsage, StringFormat='{}{0:F1}'}" Width="Auto"/>
+                                <DataGridTextColumn Header="Mémoire (MB)" Binding="{Binding MemoryUsage, StringFormat='{}{0:F1}'}" Width="Auto"/>
+                                <DataGridTextColumn Header="Heure de démarrage" Binding="{Binding StartTime, StringFormat='{}{0:HH:mm:ss}'}" Width="Auto"/>
+                                <DataGridTextColumn Header="Répond" Binding="{Binding Responding, Converter={StaticResource BoolToYesNoConverter}}" Width="Auto"/>
+                            </DataGrid.Columns>
+                            <DataGrid.RowStyle>
+                                <Style TargetType="DataGridRow">
+                                    <Setter Property="BorderThickness" Value="0,0,0,1"/>
+                                    <Setter Property="BorderBrush" Value="{DynamicResource BorderBrush}"/>
+                                </Style>
+                            </DataGrid.RowStyle>
+                            <DataGrid.CellStyle>
+                                <Style TargetType="DataGridCell">
+                                    <Setter Property="BorderThickness" Value="0,0,1,0"/>
+                                    <Setter Property="BorderBrush" Value="{DynamicResource BorderBrush}"/>
+                                    <Setter Property="Padding" Value="5"/>
+                                </Style>
+                            </DataGrid.CellStyle>
+                        </DataGrid>
+
+                        <!-- Process Actions -->
+                        <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,10,0,0">
+                            <Button Content="Optimiser pour le Gaming" Command="{Binding OptimizeForGamingCommand}"
+                                    Style="{StaticResource AccentButtonStyle}" Margin="0,0,10,0"
+                                    IsEnabled="{Binding IsMonitoring}"/>
+                            <Button Content="Optimiser pour la Productivité" Command="{Binding OptimizeForProductivityCommand}"
+                                    Style="{StaticResource AccentButtonStyle}" Margin="0,0,10,0"
+                                    IsEnabled="{Binding IsMonitoring}"/>
+                            <Button Content="Optimiser pour la Batterie" Command="{Binding OptimizeForBatteryCommand}"
+                                    Style="{StaticResource AccentButtonStyle}"
+                                    IsEnabled="{Binding IsMonitoring}"/>
+                        </StackPanel>
+                    </Grid>
+                </Border>
+            </Grid>
+        </Grid>
+
+        <!-- Notification Area -->
+        <Border Grid.Row="2" Background="{DynamicResource NotificationBackground}"
+                Visibility="{Binding NotificationVisibility}" 
+                CornerRadius="5" Margin="20" Padding="10">
+            <TextBlock Text="{Binding NotificationText}" 
+                       Foreground="{DynamicResource NotificationTextBrush}" 
+                       HorizontalAlignment="Center" VerticalAlignment="Center"/>
+        </Border>
+
+        <!-- Status Bar -->
+        <StatusBar Grid.Row="2" Background="{DynamicResource StatusBarBackground}">
+            <StatusBarItem>
+                <TextBlock Text="{Binding SystemMonitor.ProcessorInfo}" 
+                           Foreground="{DynamicResource StatusBarTextBrush}" Margin="10,0"/>
+            </StatusBarItem>
+            <StatusBarItem>
+                <TextBlock Text="{Binding LastUpdate, StringFormat='Dernière mise à jour: {0:HH:mm:ss}'}" 
+                           Foreground="{DynamicResource StatusBarTextBrush}" Margin="10,0"/>
+            </StatusBarItem>
+        </StatusBar>
+    </Grid>
+</Window>
