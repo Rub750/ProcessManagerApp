@@ -13,22 +13,14 @@ Application Windows avancée pour le monitoring en temps réel des ressources sy
 
 ## Prérequis
 
-- Windows 10 ou supérieur (x64)
-- Rien d'autre à installer
+- Windows 10 ou supérieur
+- .NET 8.0 Runtime
+- Droits administrateur (recommandé pour certaines fonctionnalités)
 
-## Installation (sans rien installer)
-
-1. Aller sur la page [Releases](https://github.com/Rub750/ProcessManagerApp/releases)
-2. Télécharger `ProcessManagerApp-win-x64.zip`
-3. Extraire le zip
-4. Exécuter `ProcessManagerApp.exe`
-
-Le zip contient une version autonome (self-contained) : le runtime .NET 8 est intégré dans l'exécutable, aucun安装 de .NET n'est nécessaire.
-
-## Installation (mode développeur)
+## Installation
 
 1. Cloner le dépôt ou télécharger les fichiers
-2. Exécuter `launch.bat` pour construire et lancer l'application (nécessite le SDK .NET 8.0)
+2. Exécuter `launch.bat` pour construire et lancer l'application
 3. Ou construire manuellement avec Visual Studio 2022
 
 ## Build manuel
@@ -53,7 +45,7 @@ dotnet publish -c Release -r win-x64 --self-contained true -p:PublishSingleFile=
 
 1. **Tableau de bord** : Vue d'ensemble des ressources système
 2. **Liste des processus** : Tous les processus en cours avec détails
-3. **Optimisation** :
+3. **Optimisation** : 
    - Mode Gaming : Optimise pour les jeux vidéo
    - Mode Productivité : Optimise pour le travail
    - Mode Économie : Réduit la consommation d'énergie
@@ -73,7 +65,8 @@ dotnet publish -c Release -r win-x64 --self-contained true -p:PublishSingleFile=
 L'application utilise :
 - **WPF** pour l'interface graphique
 - **MVVM** comme pattern de conception
-- **PerformanceCounter** pour le monitoring système
+- **PerformanceCounter** pour le mon
+itoring système
 - **Process** pour la gestion des processus
 
 ## Structure du projet
