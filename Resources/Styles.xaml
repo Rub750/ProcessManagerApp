@@ -78,7 +78,8 @@
         <Setter Property="CornerRadius" Value="3"/>
         <Setter Property="Template">
             <Setter.Value>
-                <ControlTemplate TargetType="Button">
+                <
+ControlTemplate TargetType="Button">
                     <Border Background="{TemplateBinding Background}" 
                             BorderBrush="{TemplateBinding BorderBrush}" 
                             BorderThickness="{TemplateBinding BorderThickness}" 
@@ -196,7 +197,8 @@
         <Setter Property="Background" Value="{DynamicResource ProgressBackground}"/>
         <Setter Property="Foreground" Value="{DynamicResource AccentBrush}"/>
         <Setter Property="BorderThickness" Value="0"/>
-        <Setter Property="Height" Value="8"/>
+ 
+       <Setter Property="Height" Value="8"/>
         <Setter Property="CornerRadius" Value="2"/>
     </Style>
 
