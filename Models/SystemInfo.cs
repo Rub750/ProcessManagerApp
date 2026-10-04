@@ -126,12 +126,12 @@ namespace ProcessManagerApp.Models
                         disks.Add(new DiskInfo
                         {
                             Name = drive.Name,
-                            Label = drive.VolumeLabel,
+                          
+  Label = drive.VolumeLabel,
                             TotalSpace = drive.TotalSize / (1024.0 * 1024.0 * 1024.0),
                             FreeSpace = drive.AvailableFreeSpace / (1024.0 * 1024.0 * 1024.0),
                             UsedSpace = (drive.TotalSize - drive.AvailableFreeSpace) / (1024.0 * 1024.0 * 1024.0),
-                            UsagePercent = drive.TotalSize > 0 ? ((dr
-ive.TotalSize - drive.AvailableFreeSpace) / (double)drive.TotalSize) * 100 : 0
+                            UsagePercent = drive.TotalSize > 0 ? ((drive.TotalSize - drive.AvailableFreeSpace) / (double)drive.TotalSize) * 100 : 0
                         });
                     }
                 }
@@ -174,7 +174,8 @@ ive.TotalSize - drive.AvailableFreeSpace) / (double)drive.TotalSize) * 100 : 0
                     });
                 }
             }
-            catch { }
+            catch 
+{ }
             return gpus;
         }
     }
