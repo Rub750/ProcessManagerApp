@@ -3,12 +3,19 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Management;
+using System.Runtime.InteropServices;
 using ProcessManagerApp.Models;
 
 namespace ProcessManagerApp.Services
 {
     public class ProcessService
     {
+        [DllImport("ntdll.dll")]
+        private static extern uint NtSuspendProcess(IntPtr processHandle);
+
+        [DllImport("ntdll.dll")]
+        private static extern uint NtResumeProcess(IntPtr processHandle);
+
         public List<ProcessInfo> GetProcesses()
         {
             try
@@ -22,7 +29,7 @@ namespace ProcessManagerApp.Services
                         MemoryUsage = p.WorkingSet64 / (1024.0 * 1024.0),
                         StartTime = p.StartTime,
                         Responding = p.Responding,
-                        Priority = p.PriorityClass.ToString()
+                        Priority = GetPrioritySafe(p)
                     })
                     .OrderByDescending(p => p.CpuUsage)
                     .ThenByDescending(p => p.MemoryUsage)
@@ -93,10 +100,7 @@ namespace ProcessManagerApp.Services
             try
             {
                 var process = Process.GetProcessById(processId);
-                foreach (ProcessThread thread in process.Threads)
-                {
-                    thread.Suspend();
-                }
+                NtSuspendProcess(process.Handle);
                 return true;
             }
             catch
@@ -110,10 +114,7 @@ namespace ProcessManagerApp.Services
             try
             {
                 var process = Process.GetProcessById(processId);
-                foreach (ProcessThread thread in process.Threads)
-                {
-                    thread.Resume();
-                }
+                NtResumeProcess(process.Handle);
                 return true;
             }
             catch
@@ -235,6 +236,12 @@ namespace ProcessManagerApp.Services
             }
             catch { }
             return string.Empty;
+        }
+
+        private static string GetPrioritySafe(Process p)
+        {
+            try { return p.PriorityClass.ToString(); }
+            catch { return "Unknown"; }
         }
     }
 }
