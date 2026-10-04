@@ -20,12 +20,26 @@ namespace ProcessManagerApp.Models
 
         public static ulong GetTotalMemory()
         {
-            return new Microsoft.VisualBasic.Devices.ComputerInfo().TotalPhysicalMemory;
+            return GetWmiMemoryValue("TotalVisibleMemorySize");
         }
 
         public static ulong GetAvailableMemory()
         {
-            return new Microsoft.VisualBasic.Devices.ComputerInfo().AvailablePhysicalMemory;
+            return GetWmiMemoryValue("FreePhysicalMemory");
+        }
+
+        private static ulong GetWmiMemoryValue(string property)
+        {
+            try
+            {
+                using var searcher = new System.Management.ManagementObjectSearcher("SELECT * FROM Win32_OperatingSystem");
+                foreach (var obj in searcher.Get())
+                {
+                    return Convert.ToUInt64(obj[property]) * 1024;
+                }
+            }
+            catch { }
+            return 0;
         }
 
         public static float GetMemoryUsage()
@@ -62,7 +76,8 @@ namespace ProcessManagerApp.Models
         {
             try
             {
-                using var cpuCounter = new PerformanceCounter("Process", "% Processor Time", process.ProcessName)
+            
+    using var cpuCounter = new PerformanceCounter("Process", "% Processor Time", process.ProcessName)
                 {
                     MachineName = ".",
                     InstanceName = process.ProcessName
@@ -115,7 +130,8 @@ namespace ProcessManagerApp.Models
                             TotalSpace = drive.TotalSize / (1024.0 * 1024.0 * 1024.0),
                             FreeSpace = drive.AvailableFreeSpace / (1024.0 * 1024.0 * 1024.0),
                             UsedSpace = (drive.TotalSize - drive.AvailableFreeSpace) / (1024.0 * 1024.0 * 1024.0),
-                            UsagePercent = drive.TotalSize > 0 ? ((drive.TotalSize - drive.AvailableFreeSpace) / (double)drive.TotalSize) * 100 : 0
+                            UsagePercent = drive.TotalSize > 0 ? ((dr
+ive.TotalSize - drive.AvailableFreeSpace) / (double)drive.TotalSize) * 100 : 0
                         });
                     }
                 }
@@ -174,7 +190,8 @@ namespace ProcessManagerApp.Models
     }
 
     public class DiskInfo
-    {
+    
+{
         public string Name { get; set; } = string.Empty;
         public string Label { get; set; } = string.Empty;
         public double TotalSpace { get; set; }
