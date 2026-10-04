@@ -161,7 +161,7 @@ namespace ProcessManagerApp.ViewModels
                     var diskInfo = _systemMonitor.Disks.FirstOrDefault();
                     var diskUsage = diskInfo != null ? diskInfo.UsagePercent : 0;
 
-                    SystemSummary = $
+                    SystemSummary =
                         $"CPU: {cpuUsage:F1}% | " +
                         $"RAM: {memoryUsage:F1}% ({usedMemory:F2} GB / {totalMemory:F2} GB) | " +
                         $"Disque: {diskUsage:F1}% | " +
