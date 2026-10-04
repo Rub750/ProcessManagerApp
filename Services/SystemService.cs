@@ -44,26 +44,26 @@ namespace ProcessManagerApp.Services
 
         public static ulong GetTotalMemory()
         {
-            try
-            {
-                return new Microsoft.VisualBasic.Devices.ComputerInfo().TotalPhysicalMemory;
-            }
-            catch
-            {
-                return 0;
-            }
+            return GetWmiMemoryValue("TotalVisibleMemorySize");
         }
 
         public static ulong GetAvailableMemory()
         {
+            return GetWmiMemoryValue("FreePhysicalMemory");
+        }
+
+        private static ulong GetWmiMemoryValue(string property)
+        {
             try
             {
-                return new Microsoft.VisualBasic.Devices.ComputerInfo().AvailablePhysicalMemory;
+                using var searcher = new ManagementObjectSearcher("SELECT * FROM Win32_OperatingSystem");
+                foreach (var obj in searcher.Get())
+                {
+                    return Convert.ToUInt64(obj[property]) * 1024;
+                }
             }
-            catch
-            {
-                return 0;
-            }
+            catch { }
+            return 0;
         }
 
         public static int GetProcessorCount()
@@ -76,7 +76,8 @@ namespace ProcessManagerApp.Services
             try
             {
                 using var searcher = new ManagementObjectSearcher("SELECT * FROM Win32_Processor");
-                foreach (var obj in searcher.Get())
+                foreach (var o
+bj in searcher.Get())
                 {
                     return $"{obj["Name"]} ({obj["NumberOfCores"]} cores, {obj["NumberOfLogicalProcessors"]} logical processors)";
                 }
@@ -127,7 +128,8 @@ namespace ProcessManagerApp.Services
                         gpus.Add(new GpuInfo
                         {
                             Name = obj["Name"]?.ToString() ?? "Unknown",
-                            Memory = obj["AdapterRAM"] != null ? Convert.ToDouble(obj["AdapterRAM"]) / (1024.0 * 1024.0 * 1024.0) : 0,
+                            Memory = obj[
+"AdapterRAM"] != null ? Convert.ToDouble(obj["AdapterRAM"]) / (1024.0 * 1024.0 * 1024.0) : 0,
                             DriverVersion = obj["DriverVersion"]?.ToString() ?? "Unknown"
                         });
                     }
@@ -180,7 +182,8 @@ namespace ProcessManagerApp.Services
             }
             catch { }
             return adapters;
-        }
+      
+  }
 
         public static List<ServiceInfo> GetServices()
         {
@@ -233,7 +236,8 @@ namespace ProcessManagerApp.Services
             return startupPrograms;
         }
 
-        public static void Shutdown()
+        public static void Sh
+utdown()
         {
             try
             {
