@@ -73,8 +73,7 @@
                             Command="{Binding ShowAllProcessesCommand}" Tag="Dashboard"/>
                     <Button Content="Processus" Style="{StaticResource NavButtonStyle}"
                             Command="{Binding ShowAllProcessesCommand}" Tag="Processes"/>
-                    <Button Content="Optim
-isation" Style="{StaticResource NavButtonStyle}"
+                    <Button Content="Optimisation" Style="{StaticResource NavButtonStyle}"
                             Command="{Binding ShowAllProcessesCommand}" Tag="Optimization"/>
                     <Button Content="Disques" Style="{StaticResource NavButtonStyle}"
                             Command="{Binding ShowAllProcessesCommand}" Tag="Disks"/>
@@ -136,8 +135,7 @@ isation" Style="{StaticResource NavButtonStyle}"
                                        FontSize="24" FontWeight="Bold" 
                                        Foreground="{DynamicResource AccentBrush}" Margin="0,10,0,0"/>
                             <ProgressBar Value="{Binding SystemMonitor.MemoryUsage}" Maximum="100"
-                                         Height="10" Fore
-ground="{DynamicResource AccentBrush}" 
+                                         Height="10" Foreground="{DynamicResource AccentBrush}" 
                                          Background="{DynamicResource ProgressBackground}" Margin="0,10,0,0"/>
                             <TextBlock Text="{Binding SystemMonitor.AvailableMemory, StringFormat='Disponible: {0:N0} bytes'}"
                                        FontSize="12" Foreground="{DynamicResource SecondaryTextBrush}"/>
@@ -194,8 +192,7 @@ ground="{DynamicResource AccentBrush}"
                                     IsEnabled="{Binding SelectedProcess, Converter={StaticResource NullToBoolConverter}}"/>
                             <Button Content="Fermer la tâche" Command="{Binding EndTaskCommand}"
                                     Style="{StaticResource WarningButtonStyle}" 
-                                    IsEnabled="{Binding SelectedProce
-ss, Converter={StaticResource NullToBoolConverter}}"/>
+                                    IsEnabled="{Binding SelectedProcess, Converter={StaticResource NullToBoolConverter}}"/>
                         </StackPanel>
 
                         <!-- Process Data Grid -->
@@ -251,8 +248,7 @@ ss, Converter={StaticResource NullToBoolConverter}}"/>
         </Grid>
 
         <!-- Notification Area -->
-        <Bo
-rder Grid.Row="2" Background="{DynamicResource NotificationBackground}"
+        <Border Grid.Row="2" Background="{DynamicResource NotificationBackground}"
                 Visibility="{Binding NotificationVisibility}" 
                 CornerRadius="5" Margin="20" Padding="10">
             <TextBlock Text="{Binding NotificationText}" 
