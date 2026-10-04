@@ -7,6 +7,7 @@ on:
 
 permissions:
   contents: write
+  issues: write
 
 jobs:
   build:
@@ -19,7 +20,11 @@ jobs:
           dotnet-version: '8.0.x'
 
       - name: Publish (self-contained, single file)
-        run: dotnet publish ProcessManagerApp.csproj -c Release -r win-x64 --self-contained true -p:PublishSingleFile=true -p:PublishReadyToRun=true -p:PublishTrimmed=false -o publish
+        id: publish
+        shell: pwsh
+        run: |
+          dotnet publish ProcessManagerApp.csproj -c Release -r win-x64 --self-contained true -p:PublishSingleFile=true -p:PublishReadyToRun=true -p:PublishTrimmed=false -o publish 2>&1 | Tee-Object -FilePath publish_log.txt
+          exit $LASTEXITCODE
 
       - name: Zip
         run: Compress-Archive -Path publish\* -DestinationPath ProcessManagerApp-win-x64.zip
@@ -33,3 +38,14 @@ jobs:
             Version autonome : aucun prerequis .NET a installer.
             Telecharger le zip, extraire, executer ProcessManagerApp.exe.
           files: ProcessManagerApp-win-x64.zip
+
+      - name: Report failure log as issue
+        if: failure()
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          $log = ""
+          if (Test-Path publish_log.txt) { $log = (Get-Content publish_log.txt -Tail 120) -join "`n" }
+          $body = "Echec du build CI (commit $env:GITHUB_SHA).`n`n" + '```' + "`n" + $log + "`n" + '```'
+          gh issue create -R "$env:GITHUB_REPOSITORY" -t "CI build failed - log" -b "$body"
