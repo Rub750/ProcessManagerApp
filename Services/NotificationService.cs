@@ -23,7 +23,7 @@ namespace ProcessManagerApp.Services
             {
                 try
                 {
-                    var notification = new Grid
+                    var notification = new Border
                     {
                         Background = GetBackgroundBrush(type),
                         CornerRadius = new CornerRadius(5),
@@ -43,7 +43,7 @@ namespace ProcessManagerApp.Services
                         VerticalAlignment = VerticalAlignment.Center
                     };
 
-                    notification.Children.Add(textBlock);
+                    notification.Child = textBlock;
 
                     // Add to owner window
                     var container = new Grid
