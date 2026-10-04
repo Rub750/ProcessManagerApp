@@ -74,10 +74,10 @@ namespace ProcessManagerApp.Services
         public static string GetProcessorInfo()
         {
             try
-            {
+        
+    {
                 using var searcher = new ManagementObjectSearcher("SELECT * FROM Win32_Processor");
-                foreach (var o
-bj in searcher.Get())
+                foreach (var obj in searcher.Get())
                 {
                     return $"{obj["Name"]} ({obj["NumberOfCores"]} cores, {obj["NumberOfLogicalProcessors"]} logical processors)";
                 }
@@ -126,7 +126,8 @@ bj in searcher.Get())
                     try
                     {
                         gpus.Add(new GpuInfo
-                        {
+   
+                     {
                             Name = obj["Name"]?.ToString() ?? "Unknown",
                             Memory = obj[
 "AdapterRAM"] != null ? Convert.ToDouble(obj["AdapterRAM"]) / (1024.0 * 1024.0 * 1024.0) : 0,
@@ -176,7 +177,8 @@ bj in searcher.Get())
                             MACAddress = obj["MACAddress"]?.ToString() ?? "Unknown",
                             Speed = obj["Speed"]?.ToString() ?? "Unknown"
                         });
-                    }
+   
+                 }
                     catch { }
                 }
             }
@@ -236,8 +238,7 @@ bj in searcher.Get())
             return startupPrograms;
         }
 
-        public static void Sh
-utdown()
+        public static void Shutdown()
         {
             try
             {
