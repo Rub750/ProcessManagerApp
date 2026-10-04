@@ -41,6 +41,7 @@
 
                 <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Center">
        
+
              <TextBlock Text="{Binding SystemMonitor.StatusMessage}" FontSize="14"
                                Foreground="{DynamicResource TextBrush}" VerticalAlignment="Center"/>
                 </StackPanel>
@@ -160,7 +161,8 @@
                                             <TextBlock Text="{Binding UsagePercent, StringFormat='{}{0:F1}%'}" 
                                                        FontSize="12" Foreground="{DynamicResource SecondaryTextBrush}"
                                                        HorizontalAlignment="Right"/>
-          
+         
+ 
                               </StackPanel>
                                     </DataTemplate>
                                 </ItemsControl.ItemTemplate>
@@ -181,10 +183,21 @@
 
                         <!-- Search Bar -->
                         <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0,0,0,10">
-                            <TextBox Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"
-                                     Width="200" Margin="0,0,10,0" 
-                                     Style="{StaticResource SearchBoxStyle}" 
-                                     PlaceholderText="Rechercher un processus..."/>
+                            <Grid Width="200" Margin="0,0,10,0">
+    <TextBox x:Name="SearchBox" Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource SearchBoxStyle}"/>
+    <TextBlock Text="Rechercher un processus..." Foreground="Gray" Margin="6,0,0,0" VerticalAlignment="Center" IsHitTestVisible="False">
+        <TextBlock.Style>
+            <Style TargetType="TextBlock">
+                <Setter Property="Visibility" Value="Collapsed"/>
+                <Style.Triggers>
+                    <DataTrigger Binding="{Binding Text, ElementName=SearchBox}" Value="">
+                        <Setter Property="Visibility" Value="Visible"/>
+                    </DataTrigger>
+                </Style.Triggers>
+            </Style>
+        </TextBlock.Style>
+    </TextBlock>
+</Grid>
                             <Button Content="Rafraîchir" Command="{Binding RefreshCommand}"
                                     Style="{StaticResource AccentButtonStyle}" Margin="0,0,10,0"/>
                             <Button Content="Tuer le processus" Command="{Binding KillProcessCommand}"
@@ -215,7 +228,8 @@
                                 <DataGridTextColumn Header="Répond" Binding="{Binding Responding, Converter={StaticResource BoolToYesNoConverter}}" Width="Auto"/>
                             </DataGrid.Columns>
                             <DataGrid.RowStyle>
-                                <Style TargetType="DataGridRow">
+                                <Style TargetType="DataGridRow"
+>
 
                                     <Setter Property="BorderThickness" Value="0,0,0,1"/>
                                     <Setter Property="BorderBrush" Value="{DynamicResource BorderBrush}"/>
@@ -248,7 +262,8 @@
         </Grid>
 
         <!-- Notification Area -->
-        <Border Grid.Row="2" Background="{DynamicResource NotificationBackground}"
+        
+<Border Grid.Row="2" Background="{DynamicResource NotificationBackground}"
                 Visibility="{Binding NotificationVisibility}" 
                 CornerRadius="5" Margin="20" Padding="10">
             <TextBlock Text="{Binding NotificationText}" 
